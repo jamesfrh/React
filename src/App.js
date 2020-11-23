@@ -11,10 +11,11 @@ class App extends Component {
       { name: "bob", age: 15 },
     ],
     name: "johnson",
-    age: 50,  
+    age: 50,
     house: "pasir ris",
     counter: 1,
-  };  
+    showPeople: false
+  };
 
   addCounterHandler = (event) => {
     console.log("was clicked");
@@ -34,7 +35,7 @@ class App extends Component {
     console.log(this.state.counter);
   };
 
-  nameChangedHandler = (event) =>{
+  nameChangedHandler = (event) => {
     this.setState({
       persons: [
         { name: "james", age: 28 },
@@ -47,9 +48,17 @@ class App extends Component {
     console.log(this.state.counter);
   };
 
-  
+  togglePersonHandler = () => {
+    const doesShow = this.state.showPeople;
+    this.setState({
+      showPeople: !doesShow
+    });
 
-  render() { 
+  }
+
+
+
+  render() {
     const style = {
       backgroundColor: 'white',
       font: 'inherit',
@@ -58,29 +67,37 @@ class App extends Component {
       cursor: 'pointer'
     };
 
-    return (
-      <div className="App">
+    let persons = null;
+    if(this.state.showPeople){
+      persons = (
+        <div >
         <Person
           name={this.state.persons[0].name}
           age={this.state.persons[0].age}
         />
         <Person
           name={this.state.persons[1].name}
-          age={this.state.persons[1].age} 
-          click={this.addCounterHandler.bind(this,'rob')}
+          age={this.state.persons[1].age}
+          click={this.addCounterHandler.bind(this, 'rob')}
           changed={this.nameChangedHandler}
         />
-        <Person 
+        <Person
           name={this.state.persons[2].name}
           age={this.state.persons[2].age}
         />
-
         <Person2 varone={this.state.name} vartwo={this.state.counter}>
-          child prop{" "}
+          child prop{" hello "}
         </Person2>
+      </div>
+      )
+    }
+
+    return (
+      <div className="App">
+        {persons}
         <button
-         style={style}
-         onClick={() =>this.addCounterHandler("james!")}>add counter</button>
+          style={style}
+          onClick={this.togglePersonHandler}>a button</button>
       </div>
     );
   }
