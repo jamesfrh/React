@@ -6,9 +6,9 @@ import Person2 from "./Person/Person2";
 class App extends Component {
   state = {
     persons: [
-      { name: "james", age: 28 },
-      { name: "sherm", age: 20 },
-      { name: "bob", age: 15 },
+      { id: "1", name: "james", age: 28 },
+      { id: "2", name: "sherm", age: 20 },
+      { id: "3", name: "bob", age: 15 },
     ],
     name: "johnson",
     age: 50,
@@ -17,36 +17,40 @@ class App extends Component {
     showPeople: false
   };
 
-  addCounterHandler = (event) => {
-    console.log("was clicked");
-    //Dont directly change the state like this
-    //this.state.counter = 10;
-
-    //instead do this
-    this.setState({
-      persons: [
-        { name: event, age: 28 },
-        { name: "sherm", age: 20 },
-        { name: "bob", age: 15 },
-      ],
-      counter: 10,
-      name: "johnsonNamechanged",
+  nameChangedHandler = (event, id) => {
+    //find if the id of the person exist in the array and get the id
+    const personIndex = this.state.persons.findIndex(p =>{
+      return p.id === id;
     });
-    console.log(this.state.counter);
+
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+    //or
+    // const person = Object.assign({}, this.state.persons[personIndex]);
+
+    person.name = event.target.value;
+
+    //update the array correctly
+    const persons =[...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({
+      persons: persons
+    });
   };
 
-  nameChangedHandler = (event) => {
+  deletePersonHandler = (personId) => {
+    //const persons = this.state.persons.slice();
+    //or
+    const persons =[...this.state.persons];
+    persons.splice(personId, 1);
     this.setState({
-      persons: [
-        { name: "james", age: 28 },
-        { name: event.target.value, age: 20 },
-        { name: "bob", age: 15 },
-      ],
-      counter: 1,
-      name: "johnson",
-    });
-    console.log(this.state.counter);
-  };
+      persons: persons
+    })
+
+
+  }
 
   togglePersonHandler = () => {
     const doesShow = this.state.showPeople;
@@ -55,9 +59,6 @@ class App extends Component {
     });
 
   }
-
-
-
   render() {
     const style = {
       backgroundColor: 'white',
@@ -71,23 +72,14 @@ class App extends Component {
     if(this.state.showPeople){
       persons = (
         <div >
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age}
-        />
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          click={this.addCounterHandler.bind(this, 'rob')}
-          changed={this.nameChangedHandler}
-        />
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age}
-        />
-        <Person2 varone={this.state.name} vartwo={this.state.counter}>
-          child prop{" hello "}
-        </Person2>
+          {this.state.persons.map((person, index) => {
+            return <Person 
+            name={person.name} 
+            age={person.age}
+            key={person.id} 
+            click={this.deletePersonHandler.bind(this,index)}
+            changed={(event) => this.nameChangedHandler(event, person.id)}/>
+          })}
       </div>
       )
     }
