@@ -3,8 +3,9 @@ import classes from "./App.css";
 import Persons from "../components/Persons/Persons";
 import Person2 from "../components/Persons/Person/Person2";
 import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
+import Radium from 'radium';
 
-class App extends Component {
+class App extends Component { 
   constructor(props) {
     super(props);
     console.log('App.js constructor')
@@ -61,8 +62,8 @@ class App extends Component {
     const persons = [...this.state.persons];
     persons[personIndex] = person;
 
-    //when updating the latest state and depending on old state ( eg: counter),
-    //pass function with prevState.
+    //when updating the latest state and depending on old state (eg: counter),
+    //can pass function with prevState.
     this.setState((prevState, props) => {
       return {
       persons: persons,
@@ -88,16 +89,11 @@ class App extends Component {
       showPeople: !doesShow,
     });
   };
-  render() {
-    const style = {
-      backgroundColor: "white",
-      font: "inherit",
-      border: "1px solid blue",
-      padding: "8px",
-      cursor: "pointer",
-    };
 
+  render() {
     let persons = null;
+    let btnClass = [classes.Button];
+
     if (this.state.showPeople) {
       persons = (
         <div>
@@ -108,17 +104,30 @@ class App extends Component {
           />
         </div>
       );
+
+      btnClass.push(classes.Red);
     }
+
+    const assignedClasses = [];
+    if(this.state.persons.length <= 2) {
+      assignedClasses.push(classes.red); //classes =['red']
+    }
+
+    if(this.state.persons.length <= 1) {
+      assignedClasses.push(classes.bold); //classes =['red', 'bold']
+    }
+    
 
     return (
       <div className={classes.App}>
+        <p className={assignedClasses.join(' ')}>This is really working!</p>
         {persons}
-        <button style={style} onClick={this.togglePersonHandler}>
-          a button
+        <button className={btnClass.join(' ')} onClick={this.togglePersonHandler}>
+          Toggle button
         </button>
-      </div>
+      </div>  
     );
   }
 }
 
-export default App;
+export default Radium(App);

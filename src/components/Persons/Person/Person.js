@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./Person.css";
 import Aux from "../../../hoc/Auxiliary";
+import Radium from 'radium';
 
 class Person extends Component {
   render() {
@@ -19,4 +20,4 @@ class Person extends Component {
   }
 }
 
-export default Person;
+export default Radium(Person);
